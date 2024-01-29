@@ -1,0 +1,13 @@
+---
+version: '3.8'
+services:
+  network-only:                                                                                                                               
+    image: tianon/test:true-oci                                                                                                                        
+    container_name: network-only 
+    restart: no                                                                                                             
+    networks:
+      - $NETWORK_NAME
+networks:
+  home-server:
+    name: $NETWORK_NAME
+    
