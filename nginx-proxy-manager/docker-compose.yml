@@ -5,9 +5,9 @@ services:
     deploy:
       replicas: 1
     ports:
-      - '8081:80'
+      - '8080:80'
       - '8181:81'
-      - '8443:443'
+      - '443:443'
     volumes:
       - /mnt/HomeLab/Nginx-Proxy-Manager/data:/data
       - /mnt/HomeLab/Nginx-Proxy-Manager/letsencrypt:/etc/letsencrypt
