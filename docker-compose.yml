@@ -1,17 +1,18 @@
 ---
-version: '3.8'
+version: '3.9'
 services:
   network-only:                                                                                                                               
     image: tianon/test:true-oci                                                                                                                        
-    container_name: network-only 
-    restart: no                                                                                                             
+    deploy:
+      restart_policy:
+        condition: none                                                                                                           
     networks:
-      - $INFRASTRUCTURE_NETWORK_NAME
+      - ${INFRASTRUCTURE_NETWORK_NAME}
 networks:
   vpn:
-    name: $TUNNELED_NETWORK_NAME
+    name: ${TUNNELED_NETWORK_NAME}
   infra:
-    name: $INFRASTRUCTURE_NETWORK_NAME
+    name: ${INFRASTRUCTURE_NETWORK_NAME}
   media:
-    name: $MEDIA_NETWORK_NAME
+    name: ${MEDIA_NETWORK_NAME}
     
