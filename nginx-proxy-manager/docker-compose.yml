@@ -13,3 +13,7 @@ services:
       - /truenas/nginx-proxy-manager/letsencrypt:/etc/letsencrypt
     networks:
       - networks_infra-net
+
+networks:
+  networks_infra-net:
+    external: true
