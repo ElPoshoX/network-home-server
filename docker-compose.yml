@@ -5,15 +5,21 @@ services:
   network-only:
     image: tianon/test:true-oci
     deploy:
+      replicas: 0
       restart_policy:
         condition: none
     networks:
       - ${INFRASTRUCTURE_NETWORK_NAME}
+      - ${INFRASTRUCTURE_NETWORK_NAME}
+      - ${MEDIA_NETWORK_NAME}
 
 networks:
   ${TUNNELED_NETWORK_NAME}:
-    external: true
+    driver: overlay
+    attachable: true
   ${INFRASTRUCTURE_NETWORK_NAME}:
-    external: true
+    driver: overlay
+    attachable: true
   ${MEDIA_NETWORK_NAME}:
-    external: true
+    driver: overlay
+    attachable: true
