@@ -9,7 +9,7 @@ services:
       - '8181:81'
       - '8443:443'
     volumes:
-      - ./data:/data
-      - ./letsencrypt:/etc/letsencrypt
+      - /truenas/nginx-proxy-manager/data:/data
+      - /truenas/nginx-proxy-manager/letsencrypt:/etc/letsencrypt
     networks:
       - networks_infra-net
