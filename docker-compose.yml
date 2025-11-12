@@ -1,18 +1,19 @@
 ---
 version: '3.9'
+
 services:
-  network-only:                                                                                                                               
-    image: tianon/test:true-oci                                                                                                                        
+  network-only:
+    image: tianon/test:true-oci
     deploy:
       restart_policy:
-        condition: none                                                                                                           
+        condition: none
     networks:
       - ${INFRASTRUCTURE_NETWORK_NAME}
+
 networks:
-  vpn:
-    name: ${TUNNELED_NETWORK_NAME}
-  infra:
-    name: ${INFRASTRUCTURE_NETWORK_NAME}
-  media:
-    name: ${MEDIA_NETWORK_NAME}
-    
+  ${TUNNELED_NETWORK_NAME}:
+    external: true
+  ${INFRASTRUCTURE_NETWORK_NAME}:
+    external: true
+  ${MEDIA_NETWORK_NAME}:
+    external: true
