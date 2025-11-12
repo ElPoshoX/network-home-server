@@ -6,8 +6,12 @@ services:
     container_name: network-only 
     restart: no                                                                                                             
     networks:
-      - $NETWORK_NAME
+      - $INFRASTRUCTURE_NETWORK_NAME
 networks:
-  home-server:
-    name: $NETWORK_NAME
+  vpn:
+    name: $TUNNELED_NETWORK_NAME
+  infra:
+    name: $INFRASTRUCTURE_NETWORK_NAME
+  media:
+    name: $MEDIA_NETWORK_NAME
     
