@@ -1,12 +1,12 @@
 ---
 networks:
-  ${TUNNELED_NETWORK_NAME}:
+  vpn-net:
     driver: overlay
     attachable: true
-  ${INFRASTRUCTURE_NETWORK_NAME}:
+  infra-net:
     driver: overlay
     attachable: true
-  ${MEDIA_NETWORK_NAME}:
+  media-net:
     driver: overlay
     attachable: true
 
@@ -18,6 +18,6 @@ services:
       restart_policy:
         condition: none
     networks:
-      - ${TUNNELED_NETWORK_NAME}
-      - ${INFRASTRUCTURE_NETWORK_NAME}
-      - ${MEDIA_NETWORK_NAME}
+      - vpn-net
+      - infra-net
+      - media-net
