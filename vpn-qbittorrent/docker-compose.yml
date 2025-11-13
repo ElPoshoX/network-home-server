@@ -8,11 +8,6 @@ networks:
 volumes:
   nordlynx_config:
 
-secrets:
-  NORDLYNX_PRIVATE_KEY:
-    external: true
-
-
 services:
   # 🔒 NordLynx (WireGuard de NordVPN)
   nordlynx:
@@ -37,14 +32,18 @@ services:
       - 8.8.8.8
     devices:
       - /dev/net/tun:/dev/net/tun
-    secrets:
-      - NORDLYNX_PRIVATE_KEY
+    entrypoint: >
+      /bin/sh -c "
+        echo 'nameserver 8.8.8.8' > /etc/resolv.conf &&
+        echo 'nameserver 1.1.1.1' >> /etc/resolv.conf &&
+        exec /init
+      "
     environment:
-      - PRIVATE_KEY_FILE=/run/secrets/NORDLYNX_PRIVATE_KEY
+      - PRIVATE_KEY=${NORDLYNX_PRIVATE_KEY}
       - COUNTRY_CODE=MX
       - TZ=America/Mexico_City
       - NET_LOCAL=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
-      - DNS=103.86.96.100,103.86.99.100
+      - DNS=8.8.8.8,1.1.1.1
       - PUID=911
       - PGID=911
     volumes:
