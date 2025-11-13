@@ -41,6 +41,8 @@ services:
       - TZ=America/Mexico_City
       - NET_LOCAL=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
       - DNS=103.86.96.100,103.86.99.100
+      # Workaround: Add NordVPN API IPs to allowlist since the upstream image uses hostname in iptables
+      - ALLOWLIST=45.137.184.0/24,45.137.185.0/24
     volumes:
       - nordlynx_config:/config
     networks:
