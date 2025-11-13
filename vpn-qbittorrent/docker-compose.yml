@@ -8,13 +8,13 @@ networks:
 volumes:
   nordlynx_config:
 
-secrets:
-  NORDLYNX_PRIVATE_KEY:
-    external: true
+# secrets:
+#   NORDLYNX_PRIVATE_KEY:
+#     external: true
 
-configs:
-  nordlynx_20_inet_fixed:
-    external: true
+# configs:
+#   nordlynx_20_inet_fixed:
+#     external: true
 
 services:
   # 🔒 NordLynx (WireGuard de NordVPN)
@@ -38,14 +38,14 @@ services:
       - 8.8.8.8
     devices:
       - /dev/net/tun:/dev/net/tun
-    secrets:
-      - NORDLYNX_PRIVATE_KEY
-    configs:
-      - source: nordlynx_20_inet_fixed
-        target: /etc/cont-init.d/20-inet
-        mode: 0755
+    # secrets:
+    #   - NORDLYNX_PRIVATE_KEY
+    # configs:
+    #   - source: nordlynx_20_inet_fixed
+    #     target: /etc/cont-init.d/20-inet
+    #     mode: 0755
     environment:
-      - PRIVATE_KEY_FILE=/run/secrets/NORDLYNX_PRIVATE_KEY
+      - PRIVATE_KEY=${NORDLYNX_PRIVATE_KEY}
       - COUNTRY_CODE=MX
       - TZ=America/Mexico_City
       - NET_LOCAL=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
