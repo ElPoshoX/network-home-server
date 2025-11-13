@@ -11,6 +11,8 @@ volumes:
 configs:
   nordlynx_init_20_inet:
     external: true
+  nordlynx_init_20_inet6:
+    external: true
 
 services:
   # 🔒 NordLynx (WireGuard de NordVPN)
@@ -31,21 +33,20 @@ services:
       - net.ipv4.conf.all.src_valid_mark=1
       - net.ipv6.conf.all.disable_ipv6=1
     dns:
-      - 103.86.96.100
-      - 103.86.99.100
-      - 8.8.8.8
+      - 127.0.0.11
+    dns_search:
+      - .
+    # Note: Using Docker's internal DNS (127.0.0.11:53)
+    # which is more reliable in Swarm environments
     devices:
       - /dev/net/tun:/dev/net/tun
     configs:
       - source: nordlynx_init_20_inet
         target: /etc/cont-init.d/20-inet
         mode: 0755
-    entrypoint: >
-      /bin/sh -c "
-        echo 'nameserver 8.8.8.8' > /etc/resolv.conf &&
-        echo 'nameserver 1.1.1.1' >> /etc/resolv.conf &&
-        exec /init
-      "
+      - source: nordlynx_init_20_inet6
+        target: /etc/cont-init.d/20-inet6
+        mode: 0755
     environment:
       - PRIVATE_KEY=${NORDLYNX_PRIVATE_KEY}
       - COUNTRY_CODE=MX

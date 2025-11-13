@@ -6,25 +6,36 @@ set -e
 
 echo "[$(date -Iseconds)] Initializing network interfaces..."
 
-# Find the default interface
-default_iface=$(ip route | grep "^default" | awk '{print $5}' | head -1)
-if [ -z "$default_iface" ]; then
-    default_iface="eth0"
+# Find all network interfaces (not loopback)
+interfaces=$(ip link show | grep -E "^[0-9]+:" | awk -F: '{print $2}' | tr -d ' ' | grep -v "^lo$")
+
+echo "[$(date -Iseconds)] Found interfaces: $interfaces"
+echo "[$(date -Iseconds)] Allowing all outbound traffic on non-VPN interfaces for DNS and API..."
+
+# Allow ALL outbound traffic on physical interfaces (eth0, eth1, eth2, etc)
+# This is needed for DNS resolution and API access before WireGuard tunnel is up
+# The WireGuard tunnel will take over once it's established
+for iface in $interfaces; do
+    case "$iface" in
+        wg*|tun*|tap*)
+            # Skip VPN interfaces - they'll be configured by WireGuard
+            echo "[$(date -Iseconds)] Skipping VPN interface: $iface"
+            ;;
+        *)
+            # Allow all output on physical/network interfaces
+            echo "[$(date -Iseconds)] Allowing all output on $iface"
+            iptables -A OUTPUT -o "$iface" -j ACCEPT 2>/dev/null || true
+            ip6tables -A OUTPUT -o "$iface" -j ACCEPT 2>/dev/null || true
+            ;;
+    esac
+done
+
+# Ensure DNS is properly configured
+echo "[$(date -Iseconds)] Ensuring DNS configuration..."
+if ! grep -q "nameserver" /etc/resolv.conf 2>/dev/null; then
+    echo "nameserver 8.8.8.8" > /etc/resolv.conf
+    echo "nameserver 8.8.4.4" >> /etc/resolv.conf
+    echo "[$(date -Iseconds)] Added Google DNS to /etc/resolv.conf"
 fi
-
-echo "[$(date -Iseconds)] Using interface: $default_iface"
-
-# Allow DNS and NordVPN API traffic on the default interface
-# This must happen BEFORE the firewall restricts all traffic
-echo "[$(date -Iseconds)] Configuring firewall rules for DNS and NordVPN API..."
-
-# Allow DNS (UDP and TCP port 53)
-iptables -A OUTPUT -o "$default_iface" -p udp --dport 53 -j ACCEPT 2>/dev/null || true
-iptables -A OUTPUT -o "$default_iface" -p tcp --dport 53 -j ACCEPT 2>/dev/null || true
-
-# Allow NordVPN API (use IP ranges instead of hostname)
-# api.nordvpn.com resolves to IP ranges: 45.137.184.0/24 and 45.137.185.0/24
-iptables -A OUTPUT -o "$default_iface" -d 45.137.184.0/24 -p tcp --dport 443 -j ACCEPT 2>/dev/null || true
-iptables -A OUTPUT -o "$default_iface" -d 45.137.185.0/24 -p tcp --dport 443 -j ACCEPT 2>/dev/null || true
 
 echo "[$(date -Iseconds)] Network interface initialization complete"
