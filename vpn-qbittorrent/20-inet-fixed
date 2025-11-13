@@ -6,6 +6,10 @@ set -e
 
 echo "[$(date -Iseconds)] Setting up network interface..."
 
+# Pre-resolve api.nordvpn.com to populate DNS cache before firewall rules block resolution
+echo "[$(date -Iseconds)] Pre-resolving api.nordvpn.com..."
+nslookup api.nordvpn.com 2>/dev/null || echo "[$(date -Iseconds)] Hostname pre-resolution attempt completed"
+
 # Get the interface name (usually wg0)
 iface=$(ip route | grep default | awk '{print $5}' | head -n 1)
 if [ -z "$iface" ]; then
@@ -17,6 +21,9 @@ echo "[$(date -Iseconds)] Using interface: $iface"
 # Retry loop for setting up iptables rules
 count=0
 while true; do
+    # Allow DNS traffic (needed to resolve hostnames before VPN tunnel)
+    iptables -A OUTPUT -o "$iface" -p udp --dport 53 -j ACCEPT && \
+    iptables -A OUTPUT -o "$iface" -p tcp --dport 53 -j ACCEPT && \
     # Allow traffic to NordVPN API servers
     # Using IP ranges instead of hostname since iptables doesn't resolve hostnames
     iptables -A OUTPUT -o "$iface" -d 45.137.184.0/24 -p tcp --dport 443 -j ACCEPT && \
