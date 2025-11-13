@@ -1,0 +1,30 @@
+---
+services:
+  app:
+    image: 'adguard/adguardhome:latest'
+    deploy:
+      replicas: 1
+    ports:
+      - '53:53/tcp'
+      - '53:53/udp'
+      - '67:67/udp'
+      - '68:68/tcp'
+      - '68:68/udp'
+      - '7080:80'
+      - '7443:443/tcp'
+      - '7443:443/udp'
+      - '30004:3000'
+      - '7853:853'
+      - '7784:784/udp'
+      - '5443:5443/tcp'
+      - '5443:5443/udp'
+
+    volumes:
+      - /mnt/HomeLab/AdGuard/work:/opt/adguardhome/work
+      - /mnt/HomeLab/AdGuard/conf:/opt/adguardhome/conf
+    networks:
+      - networks_infra-net
+
+networks:
+  networks_infra-net:
+    external: true
