@@ -8,13 +8,13 @@ networks:
 volumes:
   nordlynx_config:
 
-# secrets:
-#   NORDLYNX_PRIVATE_KEY:
-#     external: true
+secrets:
+  NORDLYNX_PRIVATE_KEY:
+    external: true
 
-# configs:
-#   nordlynx_20_inet_fixed:
-#     external: true
+configs:
+  nordlynx_20_inet_fixed:
+    external: true
 
 services:
   # 🔒 NordLynx (WireGuard de NordVPN)
@@ -38,20 +38,21 @@ services:
       - 8.8.8.8
     devices:
       - /dev/net/tun:/dev/net/tun
-    # secrets:
-    #   - NORDLYNX_PRIVATE_KEY
-    # configs:
-    #   - source: nordlynx_20_inet_fixed
-    #     target: /etc/cont-init.d/20-inet
-    #     mode: 0755
+    secrets:
+      - NORDLYNX_PRIVATE_KEY
+    configs:
+      - source: nordlynx_20_inet_fixed
+        target: /etc/cont-init.d/20-inet
+        mode: 0755
+      # This config fixes the upstream bubuntux/nordlynx bug where it uses
+      # hostnames in iptables rules. We replace it with IP-based rules.
+    privileged: true
     environment:
-      - PRIVATE_KEY=${NORDLYNX_PRIVATE_KEY}
+      - PRIVATE_KEY_FILE=/run/secrets/NORDLYNX_PRIVATE_KEY
       - COUNTRY_CODE=MX
       - TZ=America/Mexico_City
       - NET_LOCAL=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
       - DNS=103.86.96.100,103.86.99.100
-      # Workaround: Add NordVPN API IPs to allowlist since the upstream image uses hostname in iptables
-      - ALLOWLIST=45.137.184.0/24,45.137.185.0/24
     volumes:
       - nordlynx_config:/config
     networks:
