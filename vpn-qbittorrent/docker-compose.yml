@@ -45,6 +45,7 @@ services:
       - ALLOWLIST=45.137.184.0/24,45.137.185.0/24
     volumes:
       - nordlynx_config:/config
+      - ./20-inet-fixed:/etc/cont-init.d/20-inet:ro
     networks:
       - networks_vpn_net
       - networks_infra_net

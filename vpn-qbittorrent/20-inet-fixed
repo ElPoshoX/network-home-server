@@ -1,0 +1,35 @@
+#!/bin/bash
+# Fixed version of the nordlynx 20-inet init script
+# This fixes the hostname resolution issue in iptables rules
+
+set -e
+
+echo "[$(date -Iseconds)] Setting up network interface..."
+
+# Get the interface name (usually wg0)
+iface=$(ip route | grep default | awk '{print $5}' | head -n 1)
+if [ -z "$iface" ]; then
+    iface="wg0"
+fi
+
+echo "[$(date -Iseconds)] Using interface: $iface"
+
+# Retry loop for setting up iptables rules
+count=0
+while true; do
+    # Allow traffic to NordVPN API servers
+    # Using IP ranges instead of hostname since iptables doesn't resolve hostnames
+    iptables -A OUTPUT -o "$iface" -d 45.137.184.0/24 -p tcp --dport 443 -j ACCEPT && \
+    iptables -A OUTPUT -o "$iface" -d 45.137.185.0/24 -p tcp --dport 443 -j ACCEPT && \
+    break || {
+        count=$((count+1))
+        if [ $count -ge 30 ]; then
+            echo "[$(date -Iseconds)] Failed to configure iptables after 30 attempts"
+            exit 1
+        fi
+        echo "[$(date -Iseconds)] Retrying iptables configuration ($count/30)..."
+        sleep 1
+    }
+done
+
+echo "[$(date -Iseconds)] Network interface setup completed"
