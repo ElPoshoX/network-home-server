@@ -67,10 +67,12 @@ services:
       - networks_vpn_net
       - networks_infra_net
     healthcheck:
-      test: ["CMD", "ping", "-c", "1", "1.1.1.1"]
+      # Check if WireGuard interface exists and is up
+      test: ["CMD", "ip", "link", "show", "wg0"]
       interval: 30s
       timeout: 10s
       retries: 3
+      start_period: 60s
 
   # # 💾 qBittorrent — ruteado por NordLynx
   # qbittorrent:
