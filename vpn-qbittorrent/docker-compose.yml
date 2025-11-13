@@ -57,7 +57,7 @@ services:
       - PGID=911
       # Bypass API discovery - use hardcoded NordVPN server endpoint
       # This prevents the container from needing to resolve api.nordvpn.com
-      - ENDPOINT=155.133.15.147:51820
+      - END_POINT=155.133.15.147
       - PUBLIC_KEY=gI8xicAHT1wzvIM5v9cQkkt/+okc+/bHQKuUGjNt7nw=
     volumes:
       - nordlynx_config:/config
