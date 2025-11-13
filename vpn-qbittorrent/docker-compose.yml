@@ -38,7 +38,10 @@ services:
       - TZ=America/Mexico_City
       - NET_LOCAL=1
       - TABLE=auto
+      - DNS=1.1.1.1
       - TECHNOLOGY=NORDLYNX
+    dns:
+      - 1.1.1.1
     volumes:
       - nordlynx_config:/config
     networks:
