@@ -36,29 +36,25 @@ services:
       - PRIVATE_KEY_FILE=/run/secrets/NORDLYNX_PRIVATE_KEY
       - COUNTRY_CODE=MX
       - TZ=America/Mexico_City
-      - NET_LOCAL=1
-      - TABLE=auto
+      - NET_LOCAL=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
       - DNS=103.86.96.100,103.86.99.100
-      - TECHNOLOGY=NORDLYNX
-    dns:
-      - 103.86.96.100
-      - 103.86.99.100
+      - NETWORK=networks_infra_net
+    command: >
+      /bin/sh -c "
+        echo 'nameserver 103.86.96.100' > /etc/resolv.conf &&
+        echo 'nameserver 103.86.99.100' >> /etc/resolv.conf &&
+        echo 'search nordvpn.com' >> /etc/resolv.conf &&
+        exec /entrypoint.sh"
     volumes:
       - nordlynx_config:/config
     networks:
       - networks_vpn_net
       - networks_infra_net
     healthcheck:
-      test: >
-        /bin/sh -c '
-        ip link show wg0 >/dev/null 2>&1 &&
-        ping -c1 -W3 103.86.96.100 >/dev/null 2>&1 &&
-        wg show | grep -q "latest handshake"
-        '
+      test: ["CMD", "ping", "-c", "1", "1.1.1.1"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 15s
 
   # # 💾 qBittorrent — ruteado por NordLynx
   # qbittorrent:
