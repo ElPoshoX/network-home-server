@@ -35,6 +35,7 @@ services:
     dns:
       - 103.86.96.100
       - 103.86.99.100
+      - 8.8.8.8
     devices:
       - /dev/net/tun:/dev/net/tun
     secrets:
