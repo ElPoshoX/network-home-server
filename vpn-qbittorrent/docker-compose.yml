@@ -50,11 +50,16 @@ services:
       - networks_vpn_net
       - networks_infra_net
     healthcheck:
-      test: ["CMD-SHELL", "curl -s https://ifconfig.io | grep -q 'NordVPN'"]
-      interval: 2m
+      test: >
+        /bin/sh -c '
+        ip link show wg0 >/dev/null 2>&1 &&
+        ping -c1 -W3 103.86.96.100 >/dev/null 2>&1 &&
+        wg show | grep -q "latest handshake"
+        '
+      interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 15s
 
   # # 💾 qBittorrent — ruteado por NordLynx
   # qbittorrent:
