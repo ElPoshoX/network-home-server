@@ -33,7 +33,6 @@ services:
       - NORDLYNX_PRIVATE_KEY
     environment:
       - PRIVATE_KEY_FILE=/run/secrets/NORDLYNX_PRIVATE_KEY
-      - DNS=103.86.96.100,103.86.99.100
       - COUNTRY=Mexico
       - NETWORK=10.10.0.0/24
       - TECHNOLOGY=NordLynx
