@@ -38,12 +38,11 @@ services:
       - TZ=America/Mexico_City
       - NET_LOCAL=1
       - TABLE=auto
-      - DNS=1.1.1.1
+      - DNS=103.86.96.100,103.86.99.100
       - TECHNOLOGY=NORDLYNX
-    command: >
-      /bin/sh -c "echo 'nameserver 103.86.96.100' > /etc/resolv.conf &&
-                  echo 'nameserver 103.86.99.100' >> /etc/resolv.conf &&
-                  exec /usr/bin/dumb-init /entrypoint.sh"
+    dns:
+      - 103.86.96.100
+      - 103.86.99.100
     volumes:
       - nordlynx_config:/config
     networks:
