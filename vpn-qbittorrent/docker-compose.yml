@@ -12,9 +12,6 @@ secrets:
   NORDLYNX_PRIVATE_KEY:
     external: true
 
-configs:
-  nordlynx_20_inet_fixed:
-    external: true
 
 services:
   # 🔒 NordLynx (WireGuard de NordVPN)
@@ -29,6 +26,8 @@ services:
       - NET_ADMIN
       - SYS_MODULE
       - NET_RAW
+      - SYS_PTRACE
+    privileged: true
     sysctls:
       - net.ipv4.conf.all.src_valid_mark=1
       - net.ipv6.conf.all.disable_ipv6=1
@@ -40,21 +39,18 @@ services:
       - /dev/net/tun:/dev/net/tun
     secrets:
       - NORDLYNX_PRIVATE_KEY
-    configs:
-      - source: nordlynx_20_inet_fixed
-        target: /etc/cont-init.d/20-inet
-        mode: 0755
-      # This config fixes the upstream bubuntux/nordlynx bug where it uses
-      # hostnames in iptables rules. We replace it with IP-based rules.
-    privileged: true
     environment:
       - PRIVATE_KEY_FILE=/run/secrets/NORDLYNX_PRIVATE_KEY
       - COUNTRY_CODE=MX
       - TZ=America/Mexico_City
       - NET_LOCAL=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
       - DNS=103.86.96.100,103.86.99.100
+      - PUID=911
+      - PGID=911
     volumes:
       - nordlynx_config:/config
+      - /lib/modules:/lib/modules:ro
+      - /usr/src:/usr/src:ro
     networks:
       - networks_vpn_net
       - networks_infra_net
