@@ -37,6 +37,7 @@ services:
       - COUNTRY_CODE=MX
       - TZ=America/Mexico_City
       - NET_LOCAL=1
+      - TABLE=auto
       - TECHNOLOGY=NORDLYNX
     volumes:
       - nordlynx_config:/config
