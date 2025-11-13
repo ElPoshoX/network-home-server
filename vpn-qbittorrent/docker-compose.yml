@@ -33,9 +33,7 @@ services:
       - NORDLYNX_PRIVATE_KEY
     environment:
       - PRIVATE_KEY_FILE=/run/secrets/NORDLYNX_PRIVATE_KEY
-      - COUNTRY=Mexico
-      - NETWORK=10.10.0.0/24
-      - TECHNOLOGY=NordLynx
+      - COUNTRY_CODE=MX
       - TZ=America/Mexico_City
     volumes:
       - nordlynx_config:/config
