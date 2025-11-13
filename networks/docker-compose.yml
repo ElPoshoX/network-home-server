@@ -1,12 +1,12 @@
 ---
 networks:
-  vpn-net:
+  vpn_net:
     driver: overlay
     attachable: true
-  infra-net:
+  infra_net:
     driver: overlay
     attachable: true
-  media-net:
+  media_net:
     driver: overlay
     attachable: true
 
@@ -18,6 +18,6 @@ services:
       restart_policy:
         condition: none
     networks:
-      - vpn-net
-      - infra-net
-      - media-net
+      - vpn_net
+      - infra_net
+      - media_net

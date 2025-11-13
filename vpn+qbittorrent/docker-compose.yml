@@ -1,0 +1,74 @@
+---
+networks:
+  networks_infra_net:
+    external: true
+  networks_vpn_net:
+    external: true
+
+volumes:
+  nordlynx_config:
+
+secrets:
+  NORDLYNX_PRIVATE_KEY:
+    external: true
+
+services:
+  # 🔒 NordLynx (WireGuard de NordVPN)
+  nordlynx:
+    image: bubuntux/nordlynx:latest
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: any
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    secrets:
+      - NORDLYNX_PRIVATE_KEY
+    environment:
+      - PRIVATE_KEY_FILE=/run/secrets/NORDLYNX_PRIVATE_KEY
+      - DNS=103.86.96.100,103.86.99.100
+      - COUNTRY=Mexico
+      - NETWORK=10.10.0.0/24
+      - TECHNOLOGY=NordLynx
+      - TZ=America/Mexico_City
+    volumes:
+      - nordlynx_config:/config
+    networks:
+      - networks_vpn_net
+      - networks_infra_net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s https://ifconfig.io | grep -q 'NordVPN'"]
+      interval: 2m
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # # 💾 qBittorrent — ruteado por NordLynx
+  # qbittorrent:
+  #   image: lscr.io/linuxserver/qbittorrent:latest
+  #   deploy:
+  #     mode: replicated
+  #     replicas: 1
+  #     restart_policy:
+  #       condition: any
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ=America/Mexico_City
+  #     - WEBUI_PORT=8080
+  #   volumes:
+  #     - qbittorrent_config:/config
+  #     - /mnt/media/downloads:/downloads
+  #   networks:
+  #     - vpn-net
+  #   depends_on:
+  #     - nordlynx
+  #   command: >
+  #     sh -c "ip route add default via $(getent hosts nordlynx | awk '{print $1}') &&
+  #            qbittorrent-nox"

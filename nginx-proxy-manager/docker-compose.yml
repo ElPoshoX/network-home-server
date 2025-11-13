@@ -1,6 +1,10 @@
 ---
+networks:
+  networks_infra_net:
+    external: true
+
 services:
-  app:
+  npm:
     image: 'docker.io/jc21/nginx-proxy-manager:latest'
     deploy:
       replicas: 1
@@ -12,8 +16,5 @@ services:
       - /mnt/HomeLab/Nginx-Proxy-Manager/data:/data
       - /mnt/HomeLab/Nginx-Proxy-Manager/letsencrypt:/etc/letsencrypt
     networks:
-      - networks_infra-net
+      - networks_infra_net
 
-networks:
-  networks_infra-net:
-    external: true
