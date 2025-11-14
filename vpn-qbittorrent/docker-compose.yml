@@ -56,7 +56,7 @@ services:
       - WG_HOST=${WG_HOST:-192.168.5.135}
       - PASSWORD=${WG_EASY_PASSWORD:-changeme}
       - WG_PERSISTENT_KEEPALIVE=25
-      - WG_DEFAULT_ADDRESS=10.0.0.x
+      - WG_DEFAULT_ADDRESS=10.5.0.2
       - WG_DEFAULT_DNS=103.86.96.100,103.86.99.100
     volumes:
       - wg_easy_config:/etc/wireguard
