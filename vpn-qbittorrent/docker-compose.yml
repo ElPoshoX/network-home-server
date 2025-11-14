@@ -1,10 +1,4 @@
 ---
-networks:
-  networks_infra_net:
-    external: true
-  networks_vpn_net:
-    external: true
-
 volumes:
   nordlynx_config:
 
