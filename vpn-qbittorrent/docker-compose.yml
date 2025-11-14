@@ -20,7 +20,8 @@ services:
       - net.ipv6.conf.all.disable_ipv6=1
     environment:
       - PRIVATE_KEY=${NORDLYNX_PRIVATE_KEY}
-      - DNS=8.8.8.8,1.1.1.1
+      - DNS=103.86.96.100,103.86.99.100
+      # - DNS=8.8.8.8,1.1.1.1
     volumes:
       - nordlynx_config:/config
     networks:
