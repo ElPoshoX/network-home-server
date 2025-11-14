@@ -8,22 +8,37 @@ services:
     image: bubuntux/nordlynx:latest
     container_name: nordlynx
     restart: unless-stopped
+    privileged: true
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
       - NET_RAW
+      - SYS_PTRACE
+    devices:
+      - /dev/net/tun:/dev/net/tun
     dns:
-      - 9.9.9.9
-      - 1.1.1.1
+      - 127.0.0.11
       - 8.8.8.8
+      - 1.1.1.1
     environment:
       - PRIVATE_KEY=${NORDLYNX_PRIVATE_KEY}
       - DNS=103.86.96.100,103.86.99.100
       - ALLOWED_IPS=0.0.0.0/1,128.0.0.0/1
       - NET_LOCAL=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,192.168.5.0/24,172.16.18.0/24
       - COUNTRY_CODE=US
+      # Use hardcoded endpoint to bypass API DNS issues
+      - END_POINT=155.133.15.147:51820
+      - PUBLIC_KEY=gI8xicAHT1wzvIM5v9cQkkt/+okc+/bHQKuUGjNt7nw=
     volumes:
       - nordlynx_config:/config
+      - /lib/modules:/lib/modules:ro
+      - /usr/src:/usr/src:ro
+    healthcheck:
+      test: ["CMD", "ip", "link", "show", "wg0"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
   # # 💾 qBittorrent — ruteado por NordLynx
   # qbittorrent:
