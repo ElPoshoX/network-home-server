@@ -58,13 +58,14 @@ services:
       - WG_PERSISTENT_KEEPALIVE=25
       - WG_DEFAULT_ADDRESS=10.5.0.2
       - WG_DEFAULT_DNS=103.86.96.100,103.86.99.100
-      - UI_LISTEN_PORT=5000
-      - UI_HOST=0.0.0.0
+      # - UI_LISTEN_PORT=5000
+      # - UI_HOST=0.0.0.0
     volumes:
       - wg_easy_config:/etc/wireguard
     ports:
-      - "51821:51821/udp"
-      - "5000:5000"
+      - "51821:51821/tcp"
+      - "51820:51820/udp"
+      # - "5000:5000"
     networks:
       - networks_infra_net
     cap_add:
