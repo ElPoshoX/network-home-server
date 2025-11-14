@@ -8,10 +8,8 @@ networks:
 volumes:
   nordlynx_config:
 
-configs:
-  nordlynx_init_20_inet:
-    external: true
-  nordlynx_init_20_inet6:
+secrets:
+  NORDLYNX_PRIVATE_KEY:
     external: true
 
 services:
@@ -23,49 +21,37 @@ services:
       replicas: 1
       restart_policy:
         condition: any
+      
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
       - NET_RAW
-      - SYS_PTRACE
     privileged: true
     sysctls:
       - net.ipv4.conf.all.src_valid_mark=1
       - net.ipv6.conf.all.disable_ipv6=1
     dns:
-      - 127.0.0.11
+      - 103.86.96.100
+      - 103.86.99.100
     dns_search:
       - .
-    # Note: Using Docker's internal DNS (127.0.0.11:53)
-    # which is more reliable in Swarm environments
-    devices:
-      - /dev/net/tun:/dev/net/tun
-    configs:
-      - source: nordlynx_init_20_inet
-        target: /etc/cont-init.d/20-inet
-        mode: 0755
-      - source: nordlynx_init_20_inet6
-        target: /etc/cont-init.d/20-inet6
-        mode: 0755
+
     environment:
-      - PRIVATE_KEY=${NORDLYNX_PRIVATE_KEY}
+      - PRIVATE_KEY_FILE=/run/secrets/NORDLYNX_PRIVATE_KEY
       - COUNTRY_CODE=MX
       - TZ=America/Mexico_City
       - NET_LOCAL=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
-      - DNS=8.8.8.8,1.1.1.1
-      - PUID=911
-      - PGID=911
-      # Bypass API discovery - use hardcoded NordVPN server endpoint
-      # This prevents the container from needing to resolve api.nordvpn.com
-      - END_POINT=155.133.15.147:51820
-      - PUBLIC_KEY=gI8xicAHT1wzvIM5v9cQkkt/+okc+/bHQKuUGjNt7nw=
+      - DNS=103.86.96.100,103.86.99.100
+      - ALLOWED_IPS=0.0.0.0/1,128.0.0.0/1 
+      - "POST_UP=ip -4 route add \$(wg | awk -F'[: ]' '/endpoint/ {print \$5}') via \$(ip route | awk '/default/ {print \$3}')"
+      - "PRE_DOWN=ip -4 route del \$(route -n | awk '/255.255.255.255/ {print \$1}') via \$(ip route | awk '/default/ {print \$3}')"
     volumes:
       - nordlynx_config:/config
-      - /lib/modules:/lib/modules:ro
-      - /usr/src:/usr/src:ro
     networks:
       - networks_vpn_net
       - networks_infra_net
+    secrets:
+      - NORDLYNX_PRIVATE_KEY
     healthcheck:
       # Check if WireGuard interface exists and is up
       test: ["CMD", "ip", "link", "show", "wg0"]
