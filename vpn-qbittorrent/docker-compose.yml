@@ -16,6 +16,7 @@ services:
   # 🔒 NordLynx (WireGuard de NordVPN)
   nordlynx:
     image: bubuntux/nordlynx:latest
+    network_mode: host
     deploy:
       mode: replicated
       replicas: 1
