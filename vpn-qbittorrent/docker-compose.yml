@@ -2,9 +2,6 @@
 volumes:
   nordlynx_config:
   qbittorrent_config:
-  netdata_config:
-  netdata_cache:
-  netdata_lib:
 
 networks:
   networks_vpn_net:
