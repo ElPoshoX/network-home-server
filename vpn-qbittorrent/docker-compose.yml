@@ -39,7 +39,7 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=America/Mexico_City
-      - WEBUI_PORT=8080
+      - WEBUI_PORT=8585
     volumes:
       - qbittorrent_config:/config
       - /mnt/media/downloads:/downloads
