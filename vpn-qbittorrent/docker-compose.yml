@@ -25,6 +25,8 @@ services:
       # - DNS=8.8.8.8,1.1.1.1
     volumes:
       - nordlynx_config:/config
+    ports:
+      - "8585:8585"
     networks:
       - networks_vpn_net
       - networks_infra_net
