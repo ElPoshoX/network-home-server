@@ -54,7 +54,7 @@ services:
     restart: unless-stopped
     environment:
       - WG_HOST=${WG_HOST:-192.168.5.135}
-      - PASSWORD=${WG_EASY_PASSWORD:-changeme}
+      - PASSWORD_HASH=${WG_EASY_PASSWORD_HASH}
       - WG_PERSISTENT_KEEPALIVE=25
       - WG_DEFAULT_ADDRESS=10.5.0.2
       - WG_DEFAULT_DNS=103.86.96.100,103.86.99.100
