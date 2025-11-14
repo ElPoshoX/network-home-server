@@ -2,9 +2,9 @@
 volumes:
   nordlynx_config:
   qbittorrent_config:
-  prometheus_config:
-  prometheus_data:
-  grafana_data:
+  netdata_config:
+  netdata_cache:
+  netdata_lib:
 
 networks:
   networks_vpn_net:
@@ -49,46 +49,29 @@ services:
     depends_on:
       - nordlynx
 
-  # 📊 WireGuard Exporter — Prometheus metrics for NordLynx tunnel
-  wg-exporter:
-    image: ghcr.io/mdlayher/wireguard_exporter:latest
-    container_name: wg-exporter
+  # 📊 Netdata — Real-time monitoring dashboard with WireGuard support
+  netdata:
+    image: netdata/netdata:latest
+    container_name: netdata
     restart: unless-stopped
-    network_mode: "host"
+    hostname: nordlynx-monitor
     cap_add:
+      - SYS_PTRACE
+      - SYS_ADMIN
       - NET_ADMIN
-    ports:
-      - "9586:9586"
-
-  # 📈 Prometheus — Metrics collection
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: prometheus
-    restart: unless-stopped
+    security_opt:
+      - apparmor=unconfined
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - prometheus_data:/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-    ports:
-      - "9091:9090"
-    networks:
-      - networks_infra_net
-
-  # 📊 Grafana — Dashboard visualization
-  grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
-    restart: unless-stopped
+      - netdata_config:/etc/netdata
+      - netdata_cache:/var/cache/netdata
+      - netdata_lib:/var/lib/netdata
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-      - GF_INSTALL_PLUGINS=grafana-piechart-panel
-    volumes:
-      - grafana_data:/var/lib/grafana
+      - NETDATA_CLAIM_TOKEN=${NETDATA_CLAIM_TOKEN:-}
     ports:
-      - "3000:3000"
+      - "19999:19999"
     networks:
       - networks_infra_net
-    depends_on:
-      - prometheus
