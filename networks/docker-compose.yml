@@ -1,22 +1,19 @@
 ---
 networks:
   vpn_net:
-    driver: overlay
+    driver: bridge
     attachable: true
   infra_net:
-    driver: overlay
+    driver: bridge
     attachable: true
   media_net:
-    driver: overlay
+    driver: bridge
     attachable: true
 
 services:
   network-only:
     image: tianon/test:true-oci
-    deploy:
-      replicas: 0
-      restart_policy:
-        condition: none
+    restart: no
     networks:
       - vpn_net
       - infra_net

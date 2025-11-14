@@ -1,13 +1,13 @@
 ---
 networks:
-  networks_infra_net:
+  infra_net:
     external: true
 
 services:
   adguard:
     image: 'adguard/adguardhome:latest'
-    deploy:
-      replicas: 1
+    container_name: adguard
+    restart: unless-stopped
     ports:
       - '53:53/tcp'
       - '53:53/udp'
@@ -27,5 +27,5 @@ services:
       - /mnt/HomeLab/AdGuard/work:/opt/adguardhome/work
       - /mnt/HomeLab/AdGuard/conf:/opt/adguardhome/conf
     networks:
-      - networks_infra_net
+      - infra_net
 

@@ -45,11 +45,9 @@ services:
   # # 💾 qBittorrent — ruteado por NordLynx
   # qbittorrent:
   #   image: lscr.io/linuxserver/qbittorrent:latest
-  #   deploy:
-  #     mode: replicated
-  #     replicas: 1
-  #     restart_policy:
-  #       condition: any
+  #   container_name: qbittorrent
+  #   network_mode: service:nordlynx
+  #   restart: unless-stopped
   #   environment:
   #     - PUID=1000
   #     - PGID=1000
@@ -58,10 +56,5 @@ services:
   #   volumes:
   #     - qbittorrent_config:/config
   #     - /mnt/media/downloads:/downloads
-  #   networks:
-  #     - vpn-net
   #   depends_on:
   #     - nordlynx
-  #   command: >
-  #     sh -c "ip route add default via $(getent hosts nordlynx | awk '{print $1}') &&
-  #            qbittorrent-nox"
