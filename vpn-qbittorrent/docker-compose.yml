@@ -42,6 +42,7 @@ services:
       - PGID=1000
       - TZ=America/Mexico_City
       - WEBUI_PORT=8585
+      - WEBUI_ADDRESS=0.0.0.0
     volumes:
       - qbittorrent_config:/config
       - /mnt/media/downloads:/downloads
