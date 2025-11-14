@@ -54,14 +54,13 @@ services:
     image: mindflavor/prometheus-wireguard-exporter:latest
     container_name: wg-exporter
     restart: unless-stopped
+    network_mode: "host"
     cap_add:
       - NET_ADMIN
     environment:
       - METRICS_PORT=9586
     ports:
       - "9586:9586"
-    networks:
-      - networks_infra_net
 
   # 📈 Prometheus — Metrics collection
   prometheus:
