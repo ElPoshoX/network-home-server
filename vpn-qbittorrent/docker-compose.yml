@@ -2,6 +2,8 @@
 volumes:
   nordlynx_config:
   qbittorrent_config:
+  prometheus_data:
+  grafana_data:
 
 networks:
   networks_vpn_net:
@@ -46,17 +48,48 @@ services:
     depends_on:
       - nordlynx
 
-  # 📊 WGDashboard — Monitor NordLynx metrics, clients & traffic
-  wgdashboard:
-    image: donaldzou/wgdashboard:latest
-    container_name: wgdashboard
+  # 📊 WireGuard Exporter — Prometheus metrics for NordLynx tunnel
+  wg-exporter:
+    image: mindflavor/prometheus-wireguard-exporter:latest
+    container_name: wg-exporter
     restart: unless-stopped
     network_mode: "host"
     cap_add:
       - NET_ADMIN
-    volumes:
-      - nordlynx_config:/etc/wireguard:ro
     environment:
-      - TZ=America/Mexico_City
+      - METRICS_PORT=9586
     ports:
-      - "10086:10086"
+      - "9586:9586"
+
+  # 📈 Prometheus — Metrics collection
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    ports:
+      - "9090:9090"
+    networks:
+      - networks_infra_net
+
+  # 📊 Grafana — Dashboard visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+    volumes:
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - networks_infra_net
+    depends_on:
+      - prometheus
