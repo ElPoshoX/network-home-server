@@ -2,11 +2,11 @@
 volumes:
   nordlynx_config:
 
-# networks:
-#   networks_vpn_net:
-#     external: true
-#   networks_infra_net:
-#     external: true
+networks:
+  networks_vpn_net:
+    external: true
+  networks_infra_net:
+    external: true
 
 services:
   # 🔒 NordLynx (WireGuard de NordVPN)
@@ -16,13 +16,16 @@ services:
     restart: unless-stopped
     cap_add:
       - NET_ADMIN
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
     environment:
       - PRIVATE_KEY=${NORDLYNX_PRIVATE_KEY}
+      - DNS=8.8.8.8,1.1.1.1
     volumes:
       - nordlynx_config:/config
-    # networks:
-    #   - networks_vpn_net
-    #   - networks_infra_net
+    networks:
+      - networks_vpn_net
+      - networks_infra_net
 
   # # 💾 qBittorrent — ruteado por NordLynx
   # qbittorrent:
