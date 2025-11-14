@@ -2,6 +2,7 @@
 volumes:
   nordlynx_config:
   qbittorrent_config:
+  prometheus_config:
   prometheus_data:
   grafana_data:
 
