@@ -2,6 +2,12 @@
 volumes:
   nordlynx_config:
 
+networks:
+  vpn_net:
+    external: true
+  infra_net:
+    external: true
+
 services:
   # 🔒 NordLynx (WireGuard de NordVPN)
   nordlynx:
@@ -38,6 +44,9 @@ services:
       - nordlynx_config:/config
       - /lib/modules:/lib/modules:ro
       - /usr/src:/usr/src:ro
+    networks:
+      - vpn_net
+      - infra_net
     healthcheck:
       test: ["CMD", "ip", "link", "show", "wg0"]
       interval: 30s
