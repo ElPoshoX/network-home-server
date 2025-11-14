@@ -1,6 +1,8 @@
 ---
 volumes:
   nordlynx_config:
+  qbittorrent_config:
+  wg_easy_config:
 
 networks:
   networks_vpn_net:
@@ -28,19 +30,41 @@ services:
       - networks_vpn_net
       - networks_infra_net
 
-  # # 💾 qBittorrent — ruteado por NordLynx
-  # qbittorrent:
-  #   image: lscr.io/linuxserver/qbittorrent:latest
-  #   container_name: qbittorrent
-  #   network_mode: service:nordlynx
-  #   restart: unless-stopped
-  #   environment:
-  #     - PUID=1000
-  #     - PGID=1000
-  #     - TZ=America/Mexico_City
-  #     - WEBUI_PORT=8080
-  #   volumes:
-  #     - qbittorrent_config:/config
-  #     - /mnt/media/downloads:/downloads
-  #   depends_on:
-  #     - nordlynx
+  # 💾 qBittorrent — routed through NordLynx
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    network_mode: service:nordlynx
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Mexico_City
+      - WEBUI_PORT=8080
+    volumes:
+      - qbittorrent_config:/config
+      - /mnt/media/downloads:/downloads
+    depends_on:
+      - nordlynx
+
+  # 📊 WireGuard Status Dashboard — Monitor NordLynx VPN tunnel
+  wg-portal:
+    image: ghcr.io/wg-easy/wg-easy:latest
+    container_name: wg-easy
+    restart: unless-stopped
+    environment:
+      - WG_HOST=${WG_HOST:-192.168.5.135}
+      - PASSWORD=${WG_EASY_PASSWORD:-changeme}
+      - WG_PERSISTENT_KEEPALIVE=25
+      - WG_DEFAULT_ADDRESS=10.0.0.x
+      - WG_DEFAULT_DNS=103.86.96.100,103.86.99.100
+    volumes:
+      - wg_easy_config:/etc/wireguard
+    ports:
+      - "51821:51821/udp"
+      - "5000:5000"
+    networks:
+      - networks_infra_net
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
