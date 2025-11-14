@@ -7,12 +7,14 @@ services:
   nordlynx:
     image: bubuntux/nordlynx:latest
     container_name: nordlynx
-    network_mode: host
     restart: unless-stopped
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
       - NET_RAW
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
     environment:
       - PRIVATE_KEY=${NORDLYNX_PRIVATE_KEY}
       - DNS=103.86.96.100,103.86.99.100
