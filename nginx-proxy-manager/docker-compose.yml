@@ -1,6 +1,6 @@
 ---
 networks:
-  infra_net:
+  networks_infra_net:
     external: true
 
 services:
@@ -16,5 +16,5 @@ services:
       - /mnt/HomeLab/Nginx-Proxy-Manager/data:/data
       - /mnt/HomeLab/Nginx-Proxy-Manager/letsencrypt:/etc/letsencrypt
     networks:
-      - infra_net
+      - networks_infra_net
 

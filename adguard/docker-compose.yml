@@ -1,6 +1,6 @@
 ---
 networks:
-  infra_net:
+  networks_infra_net:
     external: true
 
 services:
@@ -27,5 +27,5 @@ services:
       - /mnt/HomeLab/AdGuard/work:/opt/adguardhome/work
       - /mnt/HomeLab/AdGuard/conf:/opt/adguardhome/conf
     networks:
-      - infra_net
+      - networks_infra_net
 
