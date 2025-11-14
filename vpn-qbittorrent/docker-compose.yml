@@ -16,13 +16,9 @@ services:
   # 🔒 NordLynx (WireGuard de NordVPN)
   nordlynx:
     image: bubuntux/nordlynx:latest
+    container_name: nordlynx
     network_mode: host
-    deploy:
-      mode: replicated
-      replicas: 1
-      restart_policy:
-        condition: any
-      
+    restart: unless-stopped
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
