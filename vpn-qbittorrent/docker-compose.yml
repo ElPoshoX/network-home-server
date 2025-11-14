@@ -51,7 +51,7 @@ services:
     image: donaldzou/wgdashboard:latest
     container_name: wgdashboard
     restart: unless-stopped
-    network_mode: "service:nordlynx"
+    network_mode: "host"
     cap_add:
       - NET_ADMIN
     volumes:
