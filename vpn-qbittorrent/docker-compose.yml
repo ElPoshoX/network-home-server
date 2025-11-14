@@ -3,9 +3,9 @@ volumes:
   nordlynx_config:
 
 networks:
-  vpn_net:
+  networks_vpn_net:
     external: true
-  infra_net:
+  networks_infra_net:
     external: true
 
 services:
@@ -22,8 +22,8 @@ services:
     volumes:
       - nordlynx_config:/config
     networks:
-      - vpn_net
-      - infra_net
+      - networks_vpn_net
+      - networks_infra_net
 
   # # 💾 qBittorrent — ruteado por NordLynx
   # qbittorrent:
