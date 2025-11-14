@@ -20,7 +20,7 @@ services:
       - PRIVATE_KEY=${NORDLYNX_PRIVATE_KEY}
       - DNS=103.86.96.100,103.86.99.100
       - ALLOWED_IPS=0.0.0.0/1,128.0.0.0/1
-      - NET_LOCAL=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+      - NET_LOCAL=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,192.168.5.0/24
       - COUNTRY_CODE=US
     volumes:
       - nordlynx_config:/config
