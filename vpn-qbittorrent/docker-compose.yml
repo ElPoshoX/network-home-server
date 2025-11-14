@@ -3,9 +3,9 @@ volumes:
   nordlynx_config:
 
 networks:
-  vpn_net:
+  networks_vpn_net:
     external: true
-  infra_net:
+  networks_infra_net:
     external: true
 
 services:
@@ -45,8 +45,8 @@ services:
       - /lib/modules:/lib/modules:ro
       - /usr/src:/usr/src:ro
     networks:
-      - vpn_net
-      - infra_net
+      - networks_vpn_net
+      - networks_infra_net
     healthcheck:
       test: ["CMD", "ip", "link", "show", "wg0"]
       interval: 30s
