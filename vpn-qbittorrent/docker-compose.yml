@@ -59,6 +59,7 @@ services:
       - NET_ADMIN
     environment:
       - METRICS_PORT=9586
+      - PREPEND_SUDO=false
     ports:
       - "9586:9586"
 
