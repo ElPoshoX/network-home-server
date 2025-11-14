@@ -18,6 +18,7 @@ services:
       - NET_ADMIN
     environment:
       - PRIVATE_KEY=${NORDLYNX_PRIVATE_KEY}
+      - ALLOWED_IPS=0.0.0.0/0
     volumes:
       - nordlynx_config:/config
     networks:
