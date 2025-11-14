@@ -51,15 +51,12 @@ services:
 
   # 📊 WireGuard Exporter — Prometheus metrics for NordLynx tunnel
   wg-exporter:
-    image: jordanwilson230/prometheus-wireguard-exporter:latest
+    image: ghcr.io/mdlayher/wireguard_exporter:latest
     container_name: wg-exporter
     restart: unless-stopped
     network_mode: "host"
     cap_add:
       - NET_ADMIN
-      - SYS_RESOURCE
-    environment:
-      - RUST_LOG=debug
     ports:
       - "9586:9586"
 
