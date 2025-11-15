@@ -56,7 +56,7 @@ services:
     restart: unless-stopped
     ports:
       - "8585:80"
-      - "3000:80"
+      - "3080:80"
     networks:
       - networks_infra_net
     volumes:
