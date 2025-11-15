@@ -33,7 +33,7 @@ services:
 
   # 💾 qBittorrent — routed through NordLynx
   qbittorrent:
-    image: ghcr.io/home-operations/qbittorrent:5.1.3
+    image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
     network_mode: service:nordlynx
     restart: unless-stopped
@@ -44,7 +44,7 @@ services:
       - WEBUI_PORT=8585
     volumes:
       - /mnt/HomeLab/QBittorrent/config:/config
-      - /mnt/media/downloads:/data/downloads
+      - /mnt/media/downloads:/downloads
     depends_on:
       - nordlynx
 
