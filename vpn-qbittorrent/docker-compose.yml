@@ -18,7 +18,7 @@ services:
     cap_add:
       - NET_ADMIN
     sysctls:
-      - net.ipv6.conf.all.disable_ipv6=0
+      - net.ipv6.conf.all.disable_ipv6=1
     environment:
       - PRIVATE_KEY=${NORDLYNX_PRIVATE_KEY}
       - DNS=103.86.96.100,103.86.99.100
@@ -27,6 +27,8 @@ services:
       - nordlynx_config:/config
     ports:
       - "8585:8585"
+      - "3000:3000"   # Firefox remote debugging
+      - "3001:3001"   # Firefox remote debugging
     networks:
       - networks_vpn_net
       - networks_infra_net
@@ -42,21 +44,28 @@ services:
       - PGID=1000
       - TZ=America/Mexico_City
       - WEBUI_PORT=8585
-      - UMASK=022
     volumes:
       - qbittorrent_config:/config
       - /mnt/media/downloads:/downloads
     depends_on:
       - nordlynx
-    command: |
-      bash -c "
-      mkdir -p /config/qBittorrent
-      if [ ! -f /config/qBittorrent/qBittorrent.conf ]; then
-        echo '[Preferences]' > /config/qBittorrent/qBittorrent.conf
-        echo 'WebUI\Port=8585' >> /config/qBittorrent/qBittorrent.conf
-        echo 'WebUI\Address=0.0.0.0' >> /config/qBittorrent/qBittorrent.conf
-      else
-        sed -i 's/WebUI\\Address=.*/WebUI\\Address=0.0.0.0/' /config/qBittorrent/qBittorrent.conf || echo 'WebUI\Address=0.0.0.0' >> /config/qBittorrent/qBittorrent.conf
-      fi
-      exec /init
-      "
+  firefox:
+        image: lscr.io/linuxserver/firefox:latest
+        # hostname: firefox                        # won't work when you do network_mode
+        container_name: firefox
+        restart: unless-stopped
+        depends_on:
+            - nordlynx
+        network_mode: service:nordlynx
+        # ports:                                   # won't work; you need to do this in the nordlynx VPN container 
+        #     - "3000:3000"                        # won't work; you need to do this in the nordlynx VPN container  
+        #     - "3001:3001"                        # won't work; you need to do this in the nordlynx VPN container
+        volumes:
+            - /path/to/config:/config
+        environment:
+            - PUID=1000
+            - PGID=1000
+            - TZ=America/New_York
+        security_opt:
+            - seccomp:unconfined
+        shm_size: "1gb"
