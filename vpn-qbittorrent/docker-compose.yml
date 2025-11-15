@@ -26,7 +26,6 @@ services:
     volumes:
       - nordlynx_config:/config
     ports:
-      - "0.0.0.0:8585:8585"
       - "3000:3000"   # Firefox remote debugging
       - "3001:3001"   # Firefox remote debugging
     networks:
@@ -49,6 +48,22 @@ services:
       - /mnt/media/downloads:/downloads
     depends_on:
       - nordlynx
+
+  # 🔄 Nginx Reverse Proxy for VPN-routed services (qBittorrent, Firefox)
+  nginx-proxy:
+    image: nginx:latest
+    container_name: nginx-proxy
+    restart: unless-stopped
+    ports:
+      - "8585:80"
+      - "3000:80"
+    networks:
+      - networks_infra_net
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - nordlynx
+
   firefox:
     image: lscr.io/linuxserver/firefox:latest
     # hostname: firefox                        # won't work when you do network_mode
@@ -57,11 +72,6 @@ services:
     depends_on:
         - nordlynx
     network_mode: service:nordlynx
-    # ports:                                   # won't work; you need to do this in the nordlynx VPN container 
-    #     - "3000:3000"                        # won't work; you need to do this in the nordlynx VPN container  
-    #     - "3001:3001"                        # won't work; you need to do this in the nordlynx VPN container
-    # volumes:
-    #     - /path/to/config:/config
     environment:
         - PUID=1000
         - PGID=1000
