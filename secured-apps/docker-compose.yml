@@ -27,6 +27,7 @@ services:
       - nordlynx_config:/config
     ports:
       - "8585:8585"
+      - "3000:3000"
     networks:
       - networks_vpn_net
       - networks_infra_net
@@ -67,23 +68,19 @@ services:
   #     - qbittorrent
   #     - firefox
 
-  # firefox:
-  #   image: lscr.io/linuxserver/firefox:latest
-  #   container_name: firefox
-  #   restart: unless-stopped
-  #   depends_on:
-  #       - nordlynx
-  #   networks:
-  #     - networks_vpn_net
-  #     - networks_infra_net
-  #   environment:
-  #       - PUID=1000
-  #       - PGID=1000
-  #       - TZ=America/Mexico_City
-  #   volumes:
-  #     - /mnt/HomeLab/Privacy/Firefox/config:/config
-  #   expose:
-  #     - "3000"
-  #   security_opt:
-  #       - seccomp:unconfined
-  #   shm_size: "1gb"
+  firefox:
+    image: lscr.io/linuxserver/firefox:latest
+    container_name: firefox
+    restart: unless-stopped
+    depends_on:
+      - nordlynx
+    network_mode: "service:nordlynx"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Mexico_City
+    volumes:
+      - /mnt/HomeLab/Privacy/Firefox/config:/config
+    security_opt:
+      - seccomp:unconfined
+    shm_size: "1gb"
