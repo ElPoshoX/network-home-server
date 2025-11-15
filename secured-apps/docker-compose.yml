@@ -33,7 +33,7 @@ services:
 
   # 💾 qBittorrent — routed through NordLynx
   qbittorrent:
-    image: ghcr.io/home-operations/qbittorrent:latest
+    image: ghcr.io/home-operations/qbittorrent:5.1.3
     container_name: qbittorrent
     network_mode: service:nordlynx
     restart: unless-stopped
