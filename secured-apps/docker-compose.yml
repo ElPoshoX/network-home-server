@@ -9,33 +9,36 @@ networks:
     external: true
 
 services:
-  # # 🔒 NordLynx (WireGuard de NordVPN)
-  # nordlynx:
-  #   image: ghcr.io/bubuntux/nordlynx:latest
-  #   container_name: nordlynx
-  #   restart: unless-stopped
-  #   cap_add:
-  #     - NET_ADMIN
-  #   sysctls:
-  #     - net.ipv6.conf.all.disable_ipv6=1
-  #   environment:
-  #     - PRIVATE_KEY=${NORDLYNX_PRIVATE_KEY}
-  #     - DNS=103.86.96.100,103.86.99.100
-  #     # - DNS=8.8.8.8,1.1.1.1
-  #   volumes:
-  #     - nordlynx_config:/config
-  #   ports:
-  #     - "3000:3000"   # Firefox remote debugging
-  #     - "3001:3001"   # Firefox remote debugging
-  #   networks:
-  #     - networks_vpn_net
-  #     - networks_infra_net
+  # 🔒 NordLynx (WireGuard de NordVPN)
+  nordlynx:
+    image: ghcr.io/bubuntux/nordlynx:latest
+    container_name: nordlynx
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
+    environment:
+      - PRIVATE_KEY=${NORDLYNX_PRIVATE_KEY}
+      - NET_LOCAL=192.168.3.0/24 192.168.5.0/24
+      - DNS=103.86.96.100,103.86.99.100
+    volumes:
+      - nordlynx_config:/config
+    ports:
+      - "8585:8585"
+    networks:
+      - networks_vpn_net
+      - networks_infra_net
 
   # 💾 qBittorrent — routed through NordLynx
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
     restart: unless-stopped
+    depends_on:
+      - nordlynx
+    network_mode: "service:nordlynx"
     environment:
       - PUID=1000
       - PGID=1000
@@ -44,11 +47,6 @@ services:
     volumes:
       - /mnt/HomeLab/QBittorrent/config:/config
       - /mnt/media/downloads:/downloads
-    networks:
-      - networks_vpn_net
-      - networks_infra_net
-    ports:
-      - "8585:8585"
 
   # 🔄 Nginx Reverse Proxy for VPN-routed services (qBittorrent, Firefox)
   # nginx-proxy:
