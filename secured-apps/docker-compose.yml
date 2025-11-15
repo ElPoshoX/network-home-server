@@ -48,7 +48,7 @@ services:
       - networks_vpn_net
       - networks_infra_net
     expose:
-      - "8585"
+      - "8585:8585"
     # depends_on:
       # - nordlynx
 
