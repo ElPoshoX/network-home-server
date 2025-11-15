@@ -48,6 +48,14 @@ services:
       - /mnt/media/downloads:/downloads
     depends_on:
       - nordlynx
+    command: |
+      bash -c "
+      sleep 2
+      if [ -f /config/qBittorrent/qBittorrent.conf ]; then
+        grep -q 'WebUI\\HostHeaderValidation' /config/qBittorrent/qBittorrent.conf || echo 'WebUI\HostHeaderValidation=false' >> /config/qBittorrent/qBittorrent.conf
+      fi
+      exec /init
+      "
 
   # 🔄 Nginx Reverse Proxy for VPN-routed services (qBittorrent, Firefox)
   nginx-proxy:
@@ -55,7 +63,7 @@ services:
     container_name: nginx-proxy
     restart: unless-stopped
     ports:
-      - "8585:8080"
+      - "8585:8585"
       - "3080:8081"
     networks:
       - networks_infra_net
