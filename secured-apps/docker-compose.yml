@@ -44,7 +44,7 @@ services:
       - WEBUI_PORT=8585
     volumes:
       - /mnt/HomeLab/QBittorrent/config:/config
-      - /mnt/media/downloads:/downloads
+      - /mnt/media/downloads:/data/downloads
     depends_on:
       - nordlynx
 
