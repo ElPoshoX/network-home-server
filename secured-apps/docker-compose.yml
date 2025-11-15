@@ -47,10 +47,8 @@ services:
     networks:
       - networks_vpn_net
       - networks_infra_net
-    expose:
+    ports:
       - "8585:8585"
-    # depends_on:
-      # - nordlynx
 
   # 🔄 Nginx Reverse Proxy for VPN-routed services (qBittorrent, Firefox)
   # nginx-proxy:
