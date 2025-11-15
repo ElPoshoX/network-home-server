@@ -55,8 +55,8 @@ services:
     container_name: nginx-proxy
     restart: unless-stopped
     ports:
-      - "8585:80"
-      - "3080:80"
+      - "8585:8080"
+      - "3080:8081"
     networks:
       - networks_infra_net
     volumes:
