@@ -26,7 +26,7 @@ services:
     volumes:
       - nordlynx_config:/config
     ports:
-      - "8585:8585"
+      - "0.0.0.0:8585:8585"
       - "3000:3000"   # Firefox remote debugging
       - "3001:3001"   # Firefox remote debugging
     networks:
