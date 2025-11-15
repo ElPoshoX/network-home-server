@@ -60,8 +60,8 @@ services:
     # ports:                                   # won't work; you need to do this in the nordlynx VPN container 
     #     - "3000:3000"                        # won't work; you need to do this in the nordlynx VPN container  
     #     - "3001:3001"                        # won't work; you need to do this in the nordlynx VPN container
-    volumes:
-        - /path/to/config:/config
+    # volumes:
+    #     - /path/to/config:/config
     environment:
         - PUID=1000
         - PGID=1000
