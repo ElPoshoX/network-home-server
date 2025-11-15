@@ -78,6 +78,8 @@ services:
         - PUID=1000
         - PGID=1000
         - TZ=America/New_York
+    volumes:
+      - /mnt/HomeLab/Privacy/Firefox/config:/config
     security_opt:
         - seccomp:unconfined
     shm_size: "1gb"
