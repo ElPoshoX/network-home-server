@@ -1,7 +1,6 @@
 ---
 volumes:
   nordlynx_config:
-  qbittorrent_config:
 
 networks:
   networks_vpn_net:
@@ -44,7 +43,7 @@ services:
       - TZ=America/Mexico_City
       - WEBUI_PORT=8585
     volumes:
-      - qbittorrent_config:/config
+      - /mnt/HomeLab/QBittorrent/config:/config
       - /mnt/media/downloads:/downloads
     depends_on:
       - nordlynx
