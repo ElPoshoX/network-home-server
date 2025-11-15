@@ -50,22 +50,22 @@ services:
     depends_on:
       - nordlynx
   firefox:
-        image: lscr.io/linuxserver/firefox:latest
-        # hostname: firefox                        # won't work when you do network_mode
-        container_name: firefox
-        restart: unless-stopped
-        depends_on:
-            - nordlynx
-        network_mode: service:nordlynx
-        # ports:                                   # won't work; you need to do this in the nordlynx VPN container 
-        #     - "3000:3000"                        # won't work; you need to do this in the nordlynx VPN container  
-        #     - "3001:3001"                        # won't work; you need to do this in the nordlynx VPN container
-        volumes:
-            - /path/to/config:/config
-        environment:
-            - PUID=1000
-            - PGID=1000
-            - TZ=America/New_York
-        security_opt:
-            - seccomp:unconfined
-        shm_size: "1gb"
+    image: lscr.io/linuxserver/firefox:latest
+    # hostname: firefox                        # won't work when you do network_mode
+    container_name: firefox
+    restart: unless-stopped
+    depends_on:
+        - nordlynx
+    network_mode: service:nordlynx
+    # ports:                                   # won't work; you need to do this in the nordlynx VPN container 
+    #     - "3000:3000"                        # won't work; you need to do this in the nordlynx VPN container  
+    #     - "3001:3001"                        # won't work; you need to do this in the nordlynx VPN container
+    volumes:
+        - /path/to/config:/config
+    environment:
+        - PUID=1000
+        - PGID=1000
+        - TZ=America/New_York
+    security_opt:
+        - seccomp:unconfined
+    shm_size: "1gb"
