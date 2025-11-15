@@ -77,7 +77,7 @@ services:
     environment:
         - PUID=1000
         - PGID=1000
-        - TZ=America/New_York
+        - TZ=America/Mexico_City
     volumes:
       - /mnt/HomeLab/Privacy/Firefox/config:/config
     security_opt:
