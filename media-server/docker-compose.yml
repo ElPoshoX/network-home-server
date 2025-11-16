@@ -13,10 +13,11 @@ services:
     restart: unless-stopped
     ports:
       - '30046:6767'
+    environment:
+      - TZ=America/Mexico_City
     volumes:
       - /mnt/HomeLab/Bazarr/config:/config
       - /mnt/HomeLab/Media-Server/movies:/movies #optional
-      - TZ=America/Mexico_City
     networks:
       - networks_media_net
   flaresolverr:
