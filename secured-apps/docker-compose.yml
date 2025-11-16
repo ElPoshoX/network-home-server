@@ -49,7 +49,7 @@ services:
       - WEBUI_PORT=30024
     volumes:
       - /mnt/HomeLab/QBittorrent/config:/config
-      - /mnt/media/downloads:/downloads
+      - /mnt/HomeLab/Media-Server/downloads:/downloads
 
   firefox:
     image: lscr.io/linuxserver/firefox:latest

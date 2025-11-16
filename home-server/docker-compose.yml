@@ -1,0 +1,106 @@
+---
+networks:
+  networks_media_net:
+    external: true
+
+volumes:
+  flaresolverr_config:
+
+services:
+  bazarr:
+    image: 'lscr.io/linuxserver/bazarr:latest'
+    container_name: bazarr
+    restart: unless-stopped
+    ports:
+      - '30046:6767'
+    volumes:
+      - /mnt/HomeLab/Bazarr/config:/config
+      - /mnt/HomeLab/Media-Server/movies:/movies #optional
+      - TZ=America/Mexico_City
+    networks:
+      - networks_media_net
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    restart: unless-stopped
+    ports:
+      - '30098:8191'
+    environment:
+      - LOG_LEVEL=info
+      - TZ=America/Mexico_City
+    volumes:
+      - flaresolverr_config:/config
+    networks:
+      - networks_media_net
+  jellyfin:
+    image: 'lscr.io/linuxserver/jellyfin:latest'
+    container_name: jellyfin
+    restart: unless-stopped
+    ports:
+      - '30013:8096'
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Mexico_City
+    volumes:
+      - /mnt/HomeLab/Jellyfin/config:/config
+    networks:
+      - networks_media_net
+  jellyseerr:
+    image: 'fallenbagel/jellyseerr:latest'
+    container_name: jellyseerr
+    restart: unless-stopped
+    ports:
+      - '30042:5055'
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Mexico_City
+    volumes:
+      - /mnt/HomeLab/Jellyseerr/config:/config
+    networks:
+      - networks_media_net  
+  prowlarr:
+    image: 'lscr.io/linuxserver/prowlarr:latest'
+    container_name: prowlarr
+    restart: unless-stopped
+    ports:
+      - '30050:9696'
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Mexico_City
+    volumes:
+      - /mnt/HomeLab/Prowlarr/config:/config
+    networks:
+      - networks_media_net
+  radarr:
+    image: 'lscr.io/linuxserver/radarr:latest'
+    container_name: radarr
+    restart: unless-stopped
+    ports:
+      - '30025:7878'
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Mexico_City
+    volumes:
+      - /mnt/HomeLab/Radarr/config:/config
+      - /mnt/HomeLab/Media-Server/movies:/movies
+      - /mnt/HomeLab/Media-Server/downloads:/downloads
+    networks:
+      - networks_media_net
+  sonarr:
+    image: 'lscr.io/linuxserver/sonarr:latest'
+    container_name: sonarr
+    restart: unless-stopped
+    ports:
+      - '30113:8989'
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Mexico_City
+    volumes:
+      - /mnt/HomeLab/Sonarr/config:/config
+      - /mnt/HomeLab/Media-Server/series:/series
+      - /mnt/HomeLab/Media-Server/downloads:/downloads
