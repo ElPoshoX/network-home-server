@@ -17,8 +17,8 @@ services:
     environment:
       - TZ=America/Mexico_City
     volumes:
-      - /mnt/HomeLab/Bazarr/config:/config
       - /mnt/HomeLab/Media-Server/media:/data/media
+      - /mnt/HomeLab/Bazarr/config:/config
     networks:
       - networks_media_net
   # Flaresolverr — Search engine for media
@@ -109,5 +109,5 @@ services:
       - PGID=1000
       - TZ=America/Mexico_City
     volumes:
-      - /mnt/HomeLab/Sonarr/config:/config
       - /mnt/HomeLab/Media-Server:/data
+      - /mnt/HomeLab/Sonarr/config:/config
