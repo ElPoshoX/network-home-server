@@ -65,7 +65,7 @@ services:
       - PGID=1000
       - TZ=America/Mexico_City
     volumes:
-      - /mnt/HomeLab/Jellyseerr/config:/config
+      - /mnt/HomeLab/Jellyseerr/config:/app/config
     networks:
       - networks_media_net  
   # Prowlarr — Indexer manager
