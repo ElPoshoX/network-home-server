@@ -27,6 +27,8 @@ services:
       - nordlynx_config:/config
     ports:
       - "30024:30024" # QBittorrent WebUI
+      - "30012:8080"  # SABnzbd WebUI
+      - "30013:9090"  # SABnzbd Secure
       - "3000:3000"  # Firefox Remote Debugging
       - "51413:51413/udp" # QBittorrent UDP
       - "51413:51413/tcp" # QBittorrent TCP
@@ -50,6 +52,22 @@ services:
     volumes:
       - /mnt/HomeLab/QBittorrent/config:/config
       - /mnt/HomeLab/Media-Server/torrents:/data/torrents
+
+  # 💾 SABnzbd — USENET downloader, routed through NordLynx
+  sabnzbd:
+    image: 'lscr.io/linuxserver/sabnzbd:latest'
+    container_name: sabnzbd
+    restart: unless-stopped
+    depends_on:
+      - nordlynx
+    network_mode: "service:nordlynx"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Mexico_City
+    volumes:
+      - /mnt/HomeLab/Media-Server:/data
+      - /mnt/HomeLab/SABnzbd/config:/config
 
   firefox:
     image: lscr.io/linuxserver/firefox:latest
