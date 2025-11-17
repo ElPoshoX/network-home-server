@@ -67,7 +67,7 @@ services:
       - TZ=America/Mexico_City
     volumes:
       - /mnt/HomeLab/Media-Server:/data
-      - /mnt/HomeLab/SABnzbd/config:/config
+      - /mnt/HomeLab/Sabnzbd/config:/config
 
   firefox:
     image: lscr.io/linuxserver/firefox:latest
