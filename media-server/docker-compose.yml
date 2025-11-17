@@ -15,6 +15,8 @@ services:
     ports:
       - '30046:6767'
     environment:
+      - PUID=1000
+      - PGID=1000
       - TZ=America/Mexico_City
     volumes:
       - /mnt/HomeLab/Media-Server/media:/data/media
@@ -29,6 +31,8 @@ services:
     ports:
       - '30098:8191'
     environment:
+      - PUID=1000
+      - PGID=1000
       - LOG_LEVEL=info
       - TZ=America/Mexico_City
     volumes:
