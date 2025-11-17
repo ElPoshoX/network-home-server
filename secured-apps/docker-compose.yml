@@ -28,7 +28,7 @@ services:
     ports:
       - "30024:30024" # QBittorrent WebUI
       - "30012:8080"  # SABnzbd WebUI
-      - "30013:9090"  # SABnzbd Secure
+      - "30014:9090"  # SABnzbd Secure
       - "3000:3000"  # Firefox Remote Debugging
       - "51413:51413/udp" # QBittorrent UDP
       - "51413:51413/tcp" # QBittorrent TCP
