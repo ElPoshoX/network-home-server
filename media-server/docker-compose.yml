@@ -18,7 +18,7 @@ services:
       - TZ=America/Mexico_City
     volumes:
       - /mnt/HomeLab/Bazarr/config:/config
-      - /mnt/HomeLab/Media-Server:/data
+      - /mnt/HomeLab/Media-Server/media:/data/media
     networks:
       - networks_media_net
   # Flaresolverr — Search engine for media
@@ -48,7 +48,7 @@ services:
       - TZ=America/Mexico_City
     volumes:
       - /mnt/HomeLab/Jellyfin/config:/config
-      - /mnt/HomeLab/Media-Server:/data
+      - /mnt/HomeLab/Media-Server/media:/data/media
     networks:
       - networks_media_net
   # Jellyseerr — Movie and TV show manager
