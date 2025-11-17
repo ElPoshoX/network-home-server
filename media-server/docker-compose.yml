@@ -93,8 +93,8 @@ services:
       - PGID=1000
       - TZ=America/Mexico_City
     volumes:
-      - /mnt/HomeLab/Radarr/config:/config
       - /mnt/HomeLab/Media-Server:/data
+      - /mnt/HomeLab/Radarr/config:/config
     networks:
       - networks_media_net
   # Sonarr — TV show manager
